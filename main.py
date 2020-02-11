@@ -1,4 +1,7 @@
 import pygame
+
+
+a = input('Первым ходит (x, o): ')
 pygame.init()
 size = width, height = 600, 800
 screen = pygame.display.set_mode(size)
@@ -7,8 +10,9 @@ screen.fill((0, 0, 0))
 
 
 class Board:
-    def __init__(self, width, height, rect, pos):
+    def __init__(self, width, height, rect, pos, first_step):
         self.width = width
+        self.step = first_step
         self.height = height
         self.board = [[0] * width for _ in range(height)]
         self.rect = rect
@@ -47,15 +51,22 @@ class Board:
                 count_1 += 1
             count += 1
 
-    def revrs(self, num):
-        return num + 1
+    def gett(self):
+        if self.step == 'o':
+            self.step = 'x'
+            return 2
+        else:
+            self.step = 'o'
+            return 1
+
 
     def mouse_click(self, ev):
         if self.can((ev.pos[0] - self.pos[0]) // self.rect[0], (ev.pos[1] - self.pos[1]) // self.rect[1]):
-            self.board[(ev.pos[1] - self.pos[1]) // self.rect[1]][(ev.pos[0] - self.pos[0]) // self.rect[0]] = self.revrs(self.board[(ev.pos[1] - self.pos[1]) // self.rect[1]][(ev.pos[0] - self.pos[0]) // self.rect[0]])
+            if self.board[(ev.pos[1] - self.pos[1]) // self.rect[1]][(ev.pos[0] - self.pos[0]) // self.rect[0]] == 0:
+                self.board[(ev.pos[1] - self.pos[1]) // self.rect[1]][(ev.pos[0] - self.pos[0]) // self.rect[0]] = self.gett()
 
 
-boarder = Board(5, 5, (50, 50), (70, 40))
+boarder = Board(5, 5, (50, 50), (70, 40), a)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
